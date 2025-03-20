@@ -4,10 +4,12 @@ import org.example.aquareserve.model.dto.MemberDTO;
 import org.example.aquareserve.model.dto.ReservationDTO;
 import org.example.aquareserve.model.repository.MemberRepository;
 import org.example.aquareserve.model.repository.ReservationRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -15,10 +17,12 @@ import java.util.UUID;
 public class MemberController {
     final private MemberRepository memberRepository;
     final private ReservationRepository reservationRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberController(MemberRepository memberRepository, ReservationRepository reservationRepository) {
+    public MemberController(MemberRepository memberRepository, ReservationRepository reservationRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.reservationRepository = reservationRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/")
@@ -58,18 +62,31 @@ public class MemberController {
     @ResponseBody
     String addMemberFromJson(@RequestBody MemberDTO memberDTO) throws Exception {
         System.out.println("JSON-based Certifications: " + memberDTO.certifications());
+        String hashedPassword = passwordEncoder.encode(memberDTO.password());
         memberRepository.save(new MemberDTO(
                 UUID.randomUUID().toString(),
                 memberDTO.name(),
                 memberDTO.email(),
-                memberDTO.password(),
+                hashedPassword,
                 memberDTO.phoneNumber(),
                 memberDTO.address(),
                 memberDTO.birthday(),
                 memberDTO.certifications()
         ));
-        System.out.println("{\"success\":true,\"message\":\"회원가입이 완료되었습니다.\"}");
-        return "index";
+        return "{\"success\":true,\"message\":\"회원가입이 완료되었습니다.\"}";
+    }
+
+    @PostMapping(value = "/login")
+    @ResponseBody
+    String login(@RequestBody MemberDTO memberDTO) throws Exception {
+        Optional<MemberDTO> member = memberRepository.findByNamePassword(
+                memberDTO.name(),
+                memberDTO.password()
+        );
+        if (member.isEmpty()) {
+            return "{\"success\":false,\"message\":\"사용자를 찾을 수 없습니다.\"}";
+        }
+        return "{\"success\":true,\"message\":\"로그인 성공\"}";
     }
 
     @PostMapping("/reservation")
