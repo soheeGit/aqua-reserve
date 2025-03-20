@@ -50,6 +50,22 @@ public interface SupabaseRepository<T> {
         return response.body();
     }
 
+    default String findByName(String name, String tableName) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("%s/%s?select=%s".formatted(baseUrl, tableName, name)))
+                .GET()
+                .headers(
+                        "apiKey", apiKey,
+                        "Authorization", "Bearer %s".formatted(apiKey)
+                )
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() >= 400) {
+            throw  new RuntimeException(response.statusCode() + " " + response.body());
+        }
+        return response.body();
+    }
+
     default String findAll(String tableName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("%s/%s?select=*".formatted(baseUrl, tableName)))
