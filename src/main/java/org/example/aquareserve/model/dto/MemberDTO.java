@@ -7,6 +7,7 @@ import java.util.List;
 
 public record MemberDTO(
         String memberId,
+        String id,      // 실제 닉네임
         String name,
         String email,
         String password,

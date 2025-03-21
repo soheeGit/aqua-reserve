@@ -1,5 +1,7 @@
 package org.example.aquareserve.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.aquareserve.model.dto.MemberDTO;
 import org.example.aquareserve.model.dto.ReservationDTO;
 import org.example.aquareserve.model.repository.MemberRepository;
@@ -26,8 +28,15 @@ public class MemberController {
     }
 
     @RequestMapping("/")
-    String index(Model model) throws Exception {
-        model.addAttribute("members", memberRepository.findAll());
+    String index(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        MemberDTO member = (MemberDTO) session.getAttribute("member");
+
+        // 세션에 member가 존재하면 해당 정보를 반환
+        if (member != null) {
+            System.out.println("로그인한 사용자: " + member);
+            request.setAttribute("member", member);
+        }
         return "index";
     }
 
@@ -46,6 +55,7 @@ public class MemberController {
 //        System.out.println("Form-based Certifications: " + memberDTO.certifications());
 //        memberRepository.save(new MemberDTO(
 //                UUID.randomUUID().toString(),
+//                memberDTO.nickName(),
 //                memberDTO.name(),
 //                memberDTO.email(),
 //                memberDTO.password(),
@@ -65,6 +75,7 @@ public class MemberController {
         String hashedPassword = passwordEncoder.encode(memberDTO.password());
         memberRepository.save(new MemberDTO(
                 UUID.randomUUID().toString(),
+                memberDTO.id(),
                 memberDTO.name(),
                 memberDTO.email(),
                 hashedPassword,
@@ -77,16 +88,18 @@ public class MemberController {
     }
 
     @PostMapping(value = "/login")
-    @ResponseBody
-    String login(@RequestBody MemberDTO memberDTO) throws Exception {
-        Optional<MemberDTO> member = memberRepository.findByNamePassword(
-                memberDTO.name(),
+    String login(@RequestBody MemberDTO memberDTO, HttpServletRequest request) throws Exception {
+        Optional<MemberDTO> member = memberRepository.findByIDPassword(
+                memberDTO.id(),
                 memberDTO.password()
         );
         if (member.isEmpty()) {
-            return "{\"success\":false,\"message\":\"사용자를 찾을 수 없습니다.\"}";
+            return "redirect:/login";
         }
-        return "{\"success\":true,\"message\":\"로그인 성공\"}";
+        HttpSession session = request.getSession();
+        session.setAttribute("member", member.get());
+
+        return "redirect:/";
     }
 
     @PostMapping("/reservation")

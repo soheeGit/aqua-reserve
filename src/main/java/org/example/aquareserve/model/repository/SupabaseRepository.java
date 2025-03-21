@@ -50,9 +50,9 @@ public interface SupabaseRepository<T> {
         return response.body();
     }
 
-    default String findByName(String name, String tableName) throws IOException, InterruptedException {
+    default String findByID(String id, String tableName) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("%s/%s?select=%s".formatted(baseUrl, tableName, name)))
+                .uri(URI.create("%s/%s?select=%s".formatted(baseUrl, tableName, id)))
                 .GET()
                 .headers(
                         "apiKey", apiKey,

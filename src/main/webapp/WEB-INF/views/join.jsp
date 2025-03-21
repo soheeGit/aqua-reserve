@@ -46,6 +46,11 @@
         <input type="hidden" name="memberId" value="">
 
         <div class="mb-3">
+            <label class="form-label">아이디</label>
+            <input name="id" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">이름</label>
             <input name="name" class="form-control" required>
         </div>

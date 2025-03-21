@@ -26,9 +26,9 @@ public class MemberRepository implements SupabaseRepository<MemberDTO>{
         return objectMapper.readValue(responseJson, new TypeReference<List<MemberDTO>>() {});
     }
 
-    public Optional<MemberDTO> findByNamePassword(String name, String password) throws IOException, InterruptedException {
+    public Optional<MemberDTO> findByIDPassword(String id, String password) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("%s/%s?select=*&name=eq.%s".formatted(baseUrl, tableName, name)))
+                .uri(URI.create("%s/%s?select=*&id=eq.%s".formatted(baseUrl, tableName, id)))
                 .GET()
                 .headers(
                         "apiKey", apiKey,

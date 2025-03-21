@@ -1,8 +1,9 @@
+<%@ page import="org.example.aquareserve.model.dto.MemberDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page session="true" %>
 <%
-  String userName = (String) session.getAttribute("userName");
-  boolean isLoggedIn = (userName != null);
+  MemberDTO member = (MemberDTO) session.getAttribute("member");
+  boolean isLoggedIn = (member != null);  // member가 존재하면 로그인된 상태
 %>
 <html>
 <head>
@@ -36,7 +37,7 @@
 
 <div class="container">
   <% if (isLoggedIn) { %>
-  <h1>환영합니다, <%= userName %> 님!</h1>
+  <h1>환영합니다, <%= member.id() %> 님!</h1>
   <p>수중 스포츠 종합 예약 시스템에 오신 것을 환영합니다.</p>
   <div class="btn-group">
     <a href="reservations" class="btn btn-primary">예약 확인</a>

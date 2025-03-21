@@ -90,8 +90,8 @@
   <h2>로그인</h2>
   <form id="loginForm" method="POST" action="<%= request.getContextPath() %>/login">
     <div class="input-group">
-      <label for="name">아이디</label>
-      <input type="text" id="name" name="name" placeholder="아이디를 입력하세요" required>
+      <label for="id">아이디</label>
+      <input type="text" id="id" name="id" placeholder="아이디를 입력하세요" required>
     </div>
     <div class="input-group">
       <label for="password">비밀번호</label>
@@ -105,36 +105,33 @@
 </div>
 
 <script>
-  document.getElementById('loginForm').addEventListener('submit', function(event) {
+  document.getElementById("loginForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const password = document.getElementById('password').value;
+    const id = document.getElementById("id").value;
+    const password = document.getElementById("password").value;
 
-    // 로그인 요청을 서버에 전송 (예: Ajax 사용)
-    fetch('<%= request.getContextPath() %>/login', {
-      method: 'POST',
+    fetch("/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
+        id: id,
         password: password
       })
     })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                window.location.href = '<%= request.getContextPath() %>'; // 로그인 성공 후 대시보드로 이동
-              } else {
-                alert('아이디 또는 비밀번호가 틀렸습니다.');
-              }
-            })
-            .catch(error => {
-              console.error('로그인 실패:', error);
-              alert('서버에 문제가 발생했습니다. 나중에 다시 시도해주세요.');
-            });
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        }
+      })
+      .catch(error => {
+        console.error("로그인 오류:", error);
+        alert("서버에 문제가 발생했습니다.");
+      });
   });
+
 </script>
 </body>
 </html>
