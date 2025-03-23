@@ -51,10 +51,18 @@ public class MemberController {
     public String login() {
         return "login";
     }
-    @GetMapping("/reservation")
-    public String reservation(HttpServletRequest request) {
+    @GetMapping("/map")
+    public String map(HttpServletRequest request) {
         String googleMapKey = dotenv.get("GOOGLE_MAP_KEY");
         request.setAttribute("googleMapKey", googleMapKey);
+        return "map";
+    }
+    @GetMapping("/reservation")
+    public String reservation(@RequestParam(name = "placeName", required = false) String placeName, Model model) {
+        if (placeName == null || placeName.isEmpty()) {
+            placeName = "알 수 없는 장소";
+        }
+        model.addAttribute("placeName", placeName);
         return "reservation";
     }
 
@@ -79,7 +87,6 @@ public class MemberController {
     @PostMapping(value = "/member", consumes = "application/json")
     @ResponseBody
     String addMemberFromJson(@RequestBody MemberDTO memberDTO) throws Exception {
-        System.out.println("JSON-based Certifications: " + memberDTO.certifications());
         String hashedPassword = passwordEncoder.encode(memberDTO.password());
         memberRepository.save(new MemberDTO(
                 UUID.randomUUID().toString(),
@@ -110,10 +117,18 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @PostMapping("/reservation")
+    @PostMapping(value = "/reservate", consumes = "application/json")
     String addReservation(@RequestBody ReservationDTO reservationDTO) throws Exception {
+        System.out.println("------------------------------");
+        System.out.println(reservationDTO);
+        if (reservationDTO != null) {
+            System.out.println(reservationDTO.reservationDate());
+        } else {
+            System.out.println("reservationDTO is null");
+        }
         reservationRepository.save(new ReservationDTO(
                 UUID.randomUUID().toString(),
+                reservationDTO.reservationPlace(),
                 reservationDTO.memberID(),
                 reservationDTO.timeslotID(),
                 reservationDTO.equipmentID(),
