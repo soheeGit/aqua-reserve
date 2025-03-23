@@ -106,22 +106,13 @@
       body: JSON.stringify(formData)
     })
             .then(response => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json(); // JSON 응답을 반환
-            })
-            .then(data => {
-              // 서버에서 응답받은 데이터 처리
-              if (data.redirectUrl) {
-                window.location.href = data.redirectUrl; // 리다이렉트 처리
-              } else {
-                console.log("예약 성공:", data); // 예약 성공 처리
+              if (response.redirected) {
+                window.location.href = response.url;
               }
             })
             .catch(error => {
-              console.error("예약 요청 실패:", error);
-              // 여기서 error.message를 통해 HTTP 상태 코드나 서버 오류 메시지를 확인
+              console.error("예약 오류:", error);
+              alert("서버에 문제가 발생했습니다.");
             });
 
   });

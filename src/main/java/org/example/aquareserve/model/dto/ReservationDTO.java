@@ -13,8 +13,8 @@ public record ReservationDTO(
         String timeslotID,
         String equipmentID,
         String lessonID,
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate reservationDate,
+        //@JsonFormat(pattern = "yyyy-MM-dd")
+        String reservationDate,
         BigDecimal paymentAmount,
         String paymentStatus
 ) {}

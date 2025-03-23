@@ -36,7 +36,6 @@ public class MemberController {
 
         // 세션에 member가 존재하면 해당 정보를 반환
         if (member != null) {
-            System.out.println("로그인한 사용자: " + member);
             request.setAttribute("member", member);
         }
         return "index";
@@ -119,13 +118,6 @@ public class MemberController {
 
     @PostMapping(value = "/reservate", consumes = "application/json")
     String addReservation(@RequestBody ReservationDTO reservationDTO) throws Exception {
-        System.out.println("------------------------------");
-        System.out.println(reservationDTO);
-        if (reservationDTO != null) {
-            System.out.println(reservationDTO.reservationDate());
-        } else {
-            System.out.println("reservationDTO is null");
-        }
         reservationRepository.save(new ReservationDTO(
                 UUID.randomUUID().toString(),
                 reservationDTO.reservationPlace(),
