@@ -41,6 +41,7 @@
   <p>수중 스포츠 종합 예약 시스템에 오신 것을 환영합니다.</p>
   <div class="btn-group">
     <a href="reservations" class="btn btn-primary">예약 확인</a>
+    <a href="reservation" class="btn btn-primary">예약 하기</a>
     <a href="logout" class="btn btn-danger">로그아웃</a>
   </div>
   <% } else { %>

@@ -1,5 +1,6 @@
 package org.example.aquareserve.controller;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.aquareserve.model.dto.MemberDTO;
@@ -20,6 +21,7 @@ public class MemberController {
     final private MemberRepository memberRepository;
     final private ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
+    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     public MemberController(MemberRepository memberRepository, ReservationRepository reservationRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
@@ -48,6 +50,12 @@ public class MemberController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+    @GetMapping("/reservation")
+    public String reservation(HttpServletRequest request) {
+        String googleMapKey = dotenv.get("GOOGLE_MAP_KEY");
+        request.setAttribute("googleMapKey", googleMapKey);
+        return "reservation";
     }
 
 //    @PostMapping(value = "/member", consumes = "application/x-www-form-urlencoded")
