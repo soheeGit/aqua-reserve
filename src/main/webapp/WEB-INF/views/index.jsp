@@ -41,7 +41,7 @@
     <% if (Objects.equals(member.id(), "admin")) { %>
       <div class="container">
         <h2>관리자 페이지</h2>
-        <a href="addSport">스포츠 추가</a>
+        <a href="admin/sport">스포츠 추가</a>
         <a href="addEquipment">스포츠 용품 추가</a>
         <a href="addLesson">레슨 추가</a>
         <a href="logout">로그아웃</a>
