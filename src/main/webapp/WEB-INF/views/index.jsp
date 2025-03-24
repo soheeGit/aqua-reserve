@@ -1,4 +1,5 @@
 <%@ page import="org.example.aquareserve.model.dto.MemberDTO" %>
+<%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page session="true" %>
 <%
@@ -37,13 +38,23 @@
 
 <div class="container">
   <% if (isLoggedIn) { %>
-  <h1>환영합니다, <%= member.id() %> 님!</h1>
-  <p>수중 스포츠 종합 예약 시스템에 오신 것을 환영합니다.</p>
-  <div class="btn-group">
-    <a href="reservations" class="btn btn-primary">예약 확인</a>
-    <a href="map" class="btn btn-primary">예약 하기</a>
-    <a href="logout" class="btn btn-danger">로그아웃</a>
-  </div>
+    <% if (Objects.equals(member.id(), "admin")) { %>
+      <div class="container">
+        <h2>관리자 페이지</h2>
+        <a href="addSport">스포츠 추가</a>
+        <a href="addEquipment">스포츠 용품 추가</a>
+        <a href="addLesson">레슨 추가</a>
+        <a href="logout">로그아웃</a>
+      </div>
+    <% } else {%>
+    <h1>환영합니다, <%= member.id() %> 님!</h1>
+    <p>수중 스포츠 종합 예약 시스템에 오신 것을 환영합니다.</p>
+    <div class="btn-group">
+      <a href="reservations" class="btn btn-primary">예약 확인</a>
+      <a href="map" class="btn btn-primary">예약 하기</a>
+      <a href="logout" class="btn btn-danger">로그아웃</a>
+    </div>
+    <% }%>
   <% } else { %>
   <h1>로그인이 필요합니다.</h1>
   <p>수중 스포츠 예약 시스템을 이용하려면 로그인하세요.</p>
