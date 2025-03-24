@@ -116,7 +116,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @PostMapping(value = "/reservate", consumes = "application/json")
+    @PostMapping(value = "/reservate")
     String addReservation(@RequestBody ReservationDTO reservationDTO) throws Exception {
         reservationRepository.save(new ReservationDTO(
                 UUID.randomUUID().toString(),
